@@ -1,6 +1,6 @@
 # Pong
 
-Pong written in python.
+Pong written in python. Project completed in 1 1/2 hours.
 
 # Screenshots
 <img src='https://github.com/jadenhensley/pong/blob/main/img/screenshot0.png'>
