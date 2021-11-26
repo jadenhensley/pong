@@ -57,11 +57,12 @@ def game_main():
 
     P1SCORE = 0
     P2SCORE = 0
+    SCORE_THRESHOLD = 8
 
     direction_x = random.choice([-1, 1])
     direction_y = random.choice([-1, 1])
 
-    pong_velocity_x = random.randint(1, 30) * direction_x
+    pong_velocity_x = random.randint(6, 10) * direction_x
     pong_velocity_y = random.randint(2, 10) * direction_y
 
     while RUN:
@@ -79,6 +80,15 @@ def game_main():
                 if gamestate == states[1]:
                     if key[pygame.K_SPACE]:
                         gamestate = states[2]
+                if gamestate == states[2]:
+                    if key[pygame.K_s]:
+                        p1rect.y += 50
+                    if key[pygame.K_w]:
+                        p1rect.y -= 50
+                    if key[pygame.K_DOWN]:
+                        p2rect.y += 50
+                    if key[pygame.K_UP]:
+                        p2rect.y -= 50
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -111,13 +121,17 @@ def game_main():
             pygame.draw.rect(screen, (0,200,0), pong)
             pong.x += pong_velocity_x
             pong.y += pong_velocity_y
+
+            if P1SCORE == SCORE_THRESHOLD or P2SCORE == SCORE_THRESHOLD:
+                gamestate = states[4]
+
             if pong.right >= screen_width:
                 pong.x, pong.y = screen_width // 2 - 90, screen_height // 2 - 30
 
                 direction_x = random.choice([-1, 1])
                 direction_y = random.choice([-1, 1])
 
-                pong_velocity_x = random.randint(1, 30) * direction_x
+                pong_velocity_x = random.randint(6, 10) * direction_x
                 pong_velocity_y = random.randint(2, 5) * direction_y
                 P1SCORE += 1
             if pong.left <= 0:
@@ -126,16 +140,20 @@ def game_main():
                 direction_x = random.choice([-1, 1])
                 direction_y = random.choice([-1, 1])
 
-                pong_velocity_x = random.randint(1, 30) * direction_x
+                pong_velocity_x = random.randint(6, 10) * direction_x
                 pong_velocity_y = random.randint(2, 10) * direction_y
                 P2SCORE += 1
             if pong.top <= 0 or pong.bottom >= screen_height:
                 pong_velocity_y *= -1
 
 
-        if GAMEOVER:
-            pass
-            # draw_text(screen, f"GAME OVER!!!", gravity_bold_large, (220, 30, 30), 100, 600)
+        if gamestate == states[4]:
+            draw_text(screen, "game over", gravity_bold, (0,200,0), screen_width // 2 - 90, screen_height // 2 - 30)
+            if P1SCORE == SCORE_THRESHOLD:
+                draw_text(screen, "Player 1 wins!", gravity_bold, (0,200,0), screen_width // 2 - 40, screen_height // 2 + 30)
+            elif P2SCORE == SCORE_THRESHOLD:
+                draw_text(screen, "Player 2 wins!", gravity_bold, (0,200,0), screen_width // 2 - 40, screen_height // 2 + 30)
+            
 
 
         pygame.display.update()
