@@ -146,6 +146,13 @@ def game_main():
             if pong.top <= 0 or pong.bottom >= screen_height:
                 pong_velocity_y *= -1
 
+            collision_tolerance = 10
+            if pong.colliderect(p1rect) or pong.colliderect(p2rect):
+                if abs(pong.left - p1rect.right) < collision_tolerance:
+                    pong_velocity_x *= -1
+                if abs(pong.right - p2rect.left) < collision_tolerance:
+                    pong_velocity_x *= -1
+
 
         if gamestate == states[4]:
             draw_text(screen, "game over", gravity_bold, (0,200,0), screen_width // 2 - 90, screen_height // 2 - 30)
