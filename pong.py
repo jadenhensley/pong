@@ -43,9 +43,10 @@ imgExitGame = pygame.image.load(f'{PROJECT_PATH}/img/exitgame.png')
 buttonNewGame = Button(screen, 30, 100, imgNewGame)
 buttonExitGame = Button(screen, 30, 400, imgExitGame)
 
+p1_moving_up, p1_moving_down, p2_moving_up, p2_moving_down = False, False, False, False
 
 def game_main():
-    global RUN, GAMEOVER, screen_width, screen_height
+    global RUN, GAMEOVER, screen_width, screen_height, p1_moving_up, p1_moving_down, p2_moving_up, p2_moving_down
 
     states = ['menu','start','playing','win','gameover']
     gamestate = states[0]
@@ -82,17 +83,48 @@ def game_main():
                         gamestate = states[2]
                 if gamestate == states[2]:
                     if key[pygame.K_s]:
-                        p1rect.y += 50
+                        p1_moving_down, p1_moving_up = True, False
                     if key[pygame.K_w]:
-                        p1rect.y -= 50
+                        p1_moving_up, p1_moving_down = True, False
                     if key[pygame.K_DOWN]:
-                        p2rect.y += 50
+                        p2_moving_down, p2_moving_up = True, False
                     if key[pygame.K_UP]:
-                        p2rect.y -= 50
+                        p2_moving_up, p2_moving_down = True, False
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_s:
+                    p1_moving_down = False
+                if event.key == pygame.K_w:
+                    p1_moving_up = False
+                if event.key == pygame.K_DOWN:
+                    p2_moving_down = False
+                if event.key == pygame.K_UP:
+                    p2_moving_up = False
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
                 quit()
+
+        AIchoice = random.randint(-10, 10)
+        if AIchoice > 0:
+            p2_moving_up, p2_moving_down = True, False
+        if AIchoice < 0:
+            p2_moving_down, p2_moving_up = True, False
+        if AIchoice == 0:
+            p2_moving_down, p2_moving_up = False, False
+
+        if p1_moving_up:
+            p1rect.y -= 10
+        if p1_moving_down:
+            p1rect.y += 10
+        if p2_moving_up:
+            p2rect.y -= 14
+        if p2_moving_down:
+            p2rect.y += 14
+
+        if p2rect.y < screen_height // 4:
+            p2rect.y += 100
+        if p2rect.y > (screen_height // 4)*3.5:
+            p2rect.y -= 100
 
         screen.fill((0,0,0))
         
