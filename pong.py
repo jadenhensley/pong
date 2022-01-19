@@ -126,6 +126,11 @@ def game_main():
         if p2rect.y > (screen_height // 4)*3.5:
             p2rect.y -= 100
 
+        if pong.top > p2rect.y:
+            p2rect.y += 50
+        if pong.bottom < p2rect.y:
+            p2rect.y -= 50
+
         screen.fill((0,0,0))
         
         if gamestate == states[0]:
